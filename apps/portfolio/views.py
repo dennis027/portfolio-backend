@@ -26,6 +26,7 @@ from apps.portfolio.permissions import IsAdminOrReadOnly
 from apps.portfolio.github import get_recent_repositories
 from utils.client_info import get_client_ip, get_user_agent_string
 from utils.responses import success_response
+from django.http import HttpResponse
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -244,3 +245,11 @@ class AdminDashboardView(APIView):
             "recent_visitors": VisitorSerializer(recent_visitors, many=True).data,
         }
         return success_response("Dashboard data retrieved.", data)
+
+
+def homepage(request):
+    """Simple homepage for root path.
+
+    Returns a plain text welcome message.
+    """
+    return HttpResponse("welcome this is the homepage")

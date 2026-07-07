@@ -6,11 +6,13 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
 from apps.accounts.views import LoginView
+from apps.portfolio.views import homepage
 from utils.health import health_check
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("health/", health_check, name="health-check"),
+    path("", homepage, name="home"),
 
     # JWT auth
     path("api/auth/login/", LoginView.as_view(), name="token-obtain-pair"),
