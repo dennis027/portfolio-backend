@@ -5,6 +5,7 @@ Reads all sensitive/environment-specific values from a .env file.
 from datetime import timedelta
 from pathlib import Path
 import os
+import dj_database_url
 
 from dotenv import load_dotenv
 
@@ -25,7 +26,7 @@ def env_list(key: str, default: str = "") -> list[str]:
 # Core
 # ---------------------------------------------------------------------------
 SECRET_KEY = os.getenv("SECRET_KEY", "insecure-dev-key-change-me")
-DEBUG = env_bool("DEBUG", True)
+DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")
 
 # ---------------------------------------------------------------------------
@@ -96,16 +97,23 @@ ASGI_APPLICATION = "config.asgi.application"
 # ---------------------------------------------------------------------------
 # Database (PostgreSQL)
 # ---------------------------------------------------------------------------
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv("DB_NAME", "portfolio_db"),
+#         "USER": os.getenv("DB_USER", "portfolio_user"),
+#         "PASSWORD": os.getenv("DB_PASSWORD", "portfolio_pass"),
+#         "HOST": os.getenv("DB_HOST", "localhost"),
+#         "PORT": os.getenv("DB_PORT", "5432"),
+#         "CONN_MAX_AGE": 60,
+#     }
+# }
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME", "portfolio_db"),
-        "USER": os.getenv("DB_USER", "portfolio_user"),
-        "PASSWORD": os.getenv("DB_PASSWORD", "portfolio_pass"),
-        "HOST": os.getenv("DB_HOST", "localhost"),
-        "PORT": os.getenv("DB_PORT", "5432"),
-        "CONN_MAX_AGE": 60,
-    }
+    "default": dj_database_url.parse(
+        os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+    )
 }
 
 # ---------------------------------------------------------------------------
